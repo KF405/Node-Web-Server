@@ -6,9 +6,11 @@ const port = process.env.PORT || 3000;
 
 var app = express();
 
-hbs.registerPartials(__dirname + '/views/partials');
 app.set('view engine', 'hbs');
 app.use(express.static(__dirname + '/public'));
+
+hbs.publicDir = require('path').join(__dirname,'/media');
+app.use(express.static(publicDir));
 
 app.use((req, res, next) => {
     var now = new Date().toString();
@@ -23,30 +25,17 @@ app.use((req, res, next) => {
     next();
 });
 
-/*app.use((req, res, next) => {
-    res.render('maitenance.hbs')
-});*/
 
 hbs.registerHelper('getCurrentYear', () => {
     return new Date().getFullYear()
 });
 
-hbs.registerHelper('screamIt', (text) => {
-    return text.toUpperCase();
-});
-
 app.get('/', (req, res) => {
    res.render('home.hbs', {
-    pageTitle: 'Home Page',
-    welcomeMessage: 'Welcome to my website',
+
    });
 });
 
-app.get('/about', (req, res) => {
-    res.render('about.hbs', {
-    pageTitle: 'About Page',
-    });
-});
 
 app.listen(port, () => {
     console.log(`Server is up on port ${port}.`);
